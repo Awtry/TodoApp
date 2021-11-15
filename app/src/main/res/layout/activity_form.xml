@@ -6,4 +6,63 @@
     android:layout_height="match_parent"
     tools:context=".FormActivity">
 
+    <EditText
+        android:id="@+id/edtTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:hint="Titulo de tarea"
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/edtDescription"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edtDescription"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Descripción de tarea."
+        android:inputType="text"
+        app:layout_constraintBottom_toTopOf="@+id/edtDate"
+        app:layout_constraintEnd_toEndOf="@id/edtTitle"
+        app:layout_constraintStart_toStartOf="@id/edtTitle"
+        app:layout_constraintTop_toBottomOf="@id/edtTitle"
+        />
+
+    <EditText
+        android:id="@+id/edtDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:hint="Fecha de la tarea"
+        app:layout_constraintBottom_toTopOf="@+id/btn_GuardarTarea"
+        app:layout_constraintStart_toStartOf="@id/edtTitle"
+        app:layout_constraintTop_toBottomOf="@id/edtDescription"
+        app:layout_constraintEnd_toStartOf="@id/edtTime"
+        />
+
+    <EditText
+        android:id="@+id/edtTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:focusable="false"
+        android:hint="Hora de la tarea"
+        app:layout_constraintBottom_toTopOf="@+id/btn_GuardarTarea"
+        app:layout_constraintStart_toEndOf="@id/edtDate"
+        app:layout_constraintEnd_toEndOf="@id/edtTitle"
+        app:layout_constraintTop_toBottomOf="@id/edtDescription"
+        />
+
+    <Button
+        android:id="@+id/btn_GuardarTarea"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Guardar"
+        app:layout_constraintStart_toStartOf="@id/edtTitle"
+        app:layout_constraintEnd_toEndOf="@id/edtTitle"
+        app:layout_constraintTop_toBottomOf="@id/edtDate"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
