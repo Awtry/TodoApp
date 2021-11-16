@@ -38,11 +38,12 @@ class TodoAdapter(private val list: MutableList<Task>) :
             val check_completado: MaterialCheckBox = findViewById(R.id.check_completado)
 
             txtTitulo.text = data.titulo
-            txtFecha.text = data.fecha.format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm a"))
+            txtFecha.text = data.fecha.format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm"))
 
             check_completado.setOnClickListener {
                 list.removeAt(position)
                 notifyItemRemoved(position)
+                notifyItemRangeChanged(position,list.size)
             }
 
             rootView.setOnClickListener { }

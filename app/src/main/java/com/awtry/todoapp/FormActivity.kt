@@ -6,10 +6,7 @@ import android.app.TimePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.EditText
-import android.widget.TimePicker
+import android.widget.*
 import com.awtry.todoapp.MainActivity.Companion.NEW_TASK
 import com.awtry.todoapp.MainActivity.Companion.NEW_TASK_LLAVE
 import java.time.LocalDate
@@ -49,7 +46,8 @@ class FormActivity : AppCompatActivity() {
 
         edtDate.setOnClickListener {
             val nowDate = LocalDate.now()
-            DatePickerDialog(
+
+            var calendario = DatePickerDialog(
                 this,
                 { _, year, month, day ->
                     edtDate.setText("$day/$month/$year")
@@ -57,16 +55,34 @@ class FormActivity : AppCompatActivity() {
                 nowDate.year,
                 nowDate.monthValue - 1,
                 nowDate.dayOfMonth
-            ).show()
+            )
+
+            calendario.getDatePicker().setMinDate(System.currentTimeMillis() - 1000)
+            calendario.show()
+
         }
 
         edtTime.setOnClickListener {
             val nowTime = LocalTime.now()
 
+
             TimePickerDialog(
                 this,
                 { _, hour, minute ->
-                    edtTime.setText("$hour:$minute")
+                    var hora = if (hour.toString().length > 1) {
+                        hour.toString()
+                    } else {
+                        "0$hour"
+                    }
+
+                    var minuto = if (minute.toString().length > 1) {
+                        minute.toString()
+                    } else {
+                        "0$minute"
+                    }
+
+                    edtTime.setText("$hora:$minuto")
+                    //edtTime.setText("$hour:$minute")
                 },
                 nowTime.hour,
                 nowTime.minute,
@@ -75,33 +91,47 @@ class FormActivity : AppCompatActivity() {
         }
 
         btn_GuardarTarea.setOnClickListener {
-            setResult(
-                NEW_TASK,
-                Intent().putExtra(
-                    NEW_TASK_LLAVE,
-                    Task(
-                        0,
-                        edtTitle.text.toString(),
-                        edtDescription.text.toString(),
-                        //Entregamos ya el objeto con la fecha y le damos un formato de salida.
-                        LocalDateTime.of(
-                            LocalDate.parse(
-                                edtDate.text,
-                                DateTimeFormatter.ofPattern("dd/MM/yyyy")
-                            ),
-                            LocalTime.parse(
-                                edtTime.text,
-                                DateTimeFormatter.ofPattern("HH:mm")
+
+            if (edtTitle.text.toString().trim().isEmpty() || edtDescription.text.toString().trim()
+                    .isEmpty() || edtTime.text.toString().trim()
+                    .isEmpty() || edtDate.text.toString().trim().isEmpty()
+            ) {
+                //Avisar al usuario que le falta rellenar todos los huecos
+                Toast.makeText(
+                    this,
+                    "Llename todo por favor uwur.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                setResult(
+                    NEW_TASK,
+                    Intent().putExtra(
+                        NEW_TASK_LLAVE,
+                        Task(
+                            0,
+                            edtTitle.text.toString(),
+                            edtDescription.text.toString(),
+                            //Entregamos ya el objeto con la fecha y le damos un formato de salida.
+                            LocalDateTime.of(
+                                LocalDate.parse(
+                                    edtDate.text,
+                                    DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                                ),
+                                LocalTime.parse(
+                                    edtTime.text,
+                                    DateTimeFormatter.ofPattern("HH:mm")
+                                )
                             )
                         )
-
-                        //edtTime.text
                     )
                 )
-            )
 
-            //Para que ya una vez completada la recolección de datos se regrese a la vista anterior
-            finish()
+                //Para que ya una vez completada la recolección de datos se regrese a la vista anterior
+                finish()
+            }
+
+
+
         }
     }
 }
