@@ -8,7 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.checkbox.MaterialCheckBox
 import java.time.format.DateTimeFormatter
 
-class TodoAdapter(private val list: MutableList<Task>) :
+class TodoAdapter(
+    private val list: MutableList<Task>,
+    var onClickDoneTask: (task: Task, position: Int) -> Unit,
+    var onClickDetailTask: (task: Task) -> Unit
+) :
     RecyclerView.Adapter<TodoAdapter.TaskViewHolder>() {
 
     //funcion para llamar al momento de agrgegar una tarea.
@@ -16,6 +20,20 @@ class TodoAdapter(private val list: MutableList<Task>) :
         list.add(task)
         notifyItemInserted(list.size - 1)
     }
+
+    fun update(task: Task) {
+        val index = list.indexOfFirst { it.id == task.id }
+        list[index] = task
+        notifyItemChanged(index)
+    }
+
+    fun remove(position: Int) {
+        list.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeRemoved(position, list.size)
+    }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoAdapter.TaskViewHolder {
         //Para rellenar los datos, usamos la parte rellenar
@@ -25,7 +43,8 @@ class TodoAdapter(private val list: MutableList<Task>) :
     }
 
     override fun onBindViewHolder(holder: TodoAdapter.TaskViewHolder, position: Int) {
-        holder.bind(list[position], position)
+        //holder.bind(list[position])
+        (holder as TaskViewHolder).bind(list[position], position)
     }
 
     override fun getItemCount() = list.size
@@ -38,15 +57,24 @@ class TodoAdapter(private val list: MutableList<Task>) :
             val check_completado: MaterialCheckBox = findViewById(R.id.check_completado)
 
             txtTitulo.text = data.titulo
-            txtFecha.text = data.fecha.format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm"))
+            txtFecha.text = data.fecha?.format(DateTimeFormatter.ofPattern("dd/MM/yy HH:mm"))
+
+            check_completado.isChecked = false
 
             check_completado.setOnClickListener {
-                list.removeAt(position)
-                notifyItemRemoved(position)
-                notifyItemRangeChanged(position,list.size)
+                //list.removeAt(adapterPosition)
+                //notifyItemRemoved(position)
+                //notifyItemRangeChanged(position,list.size)
+
+                //layoutPosition
+
+                //notifyItemRemoved(adapterPosition)
+                onClickDoneTask(data, adapterPosition)
             }
 
-            rootView.setOnClickListener { }
+            rootView.setOnClickListener {
+                onClickDetailTask(data)
+            }
         }
     }
 }
